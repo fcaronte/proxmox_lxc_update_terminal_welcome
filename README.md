@@ -42,6 +42,7 @@ Se lo script è ospitato su un repository remoto (ad esempio, GitHub), è possib
 
 
 ```bash
+
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/fcaronte/proxmox_lxc_update_terminal_welcome/main/update-terminal-welcome.sh)" -- all
 ```
 
@@ -112,15 +113,15 @@ This Bash script (`update-terminal-welcome.sh`) automates the update of the logi
 
 Aggiungi la seguente sottosezione nella sezione "Usage" (`### Usage`):
 
-```markdown
+
 #### 🚀 Direct Execution from URL
 
 If the script is hosted on a remote repository (e.g., GitHub), you can download and run it directly in one step, without saving it locally. This is particularly useful for *one-shot* executions:
 
 ```bash
+
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/fcaronte/proxmox_lxc_update_terminal_welcome/main/update-terminal-welcome.sh)" -- all
 ```
-
 
 ### Usage
 

@@ -1,146 +1,81 @@
+-----
+
+# 🌍 Language / Lingua
+
+  * [🇮🇹 Leggi in Italiano](#-proxmox-lxc-dynamic-motd-banner-italiano)
+  * [🇬🇧 Read in English](#-proxmox-lxc-dynamic-motd-banner-english)
 
 -----
 
-# 🚀 LXC Terminal Welcome Banner Updater
+# 🇮🇹 Proxmox LXC Dynamic MOTD Banner (Italiano)
 
-Questo script Bash (`update-terminal-welcome.sh`) automatizza l'aggiornamento del banner di benvenuto (MOTD) su uno o più container LXC Debian gestiti da Proxmox, fornendo informazioni dinamiche e colorate al momento del login.
+# 🚀 Proxmox LXC Dynamic MOTD Banner (v3.3.0)
 
-## 🇮🇹 Italiano
+[![Bash Script](https://img.shields.io/badge/language-Bash-4EAA25.svg)](https://www.gnu.org/software/bash/)
+[![Proxmox](https://img.shields.io/badge/Platform-Proxmox-E57020.svg)](https://www.proxmox.com)
+[![GitHub Code](https://img.shields.io/badge/GitHub-Repository-blue.svg?logo=github)](https://raw.githubusercontent.com/fcaronte/proxmox_lxc_update_terminal_welcome/refs/heads/main/update-terminal-welcome.sh)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-### Caratteristiche Principali
-
-  * **Aggiornamento Centralizzato:** Applica la configurazione a uno o più LXC in un'unica esecuzione.
-  * **Discovery Automatica:** Trova tutti i container LXC **attivi** (running) sul tuo host Proxmox.
-  * **Informazioni Dinamiche:** Il banner visualizzato include:
-      * Hostname del container.
-      * Versione del sistema operativo Debian.
-      * Indirizzo IP LAN principale (ottimizzato per ignorare gli IP Docker/VPN).
-  * **Pulizia Automatizzata:** Rimuove i vecchi script MOTD che potrebbero interferire con il nuovo banner.
-  * **Affidabilità:** Utilizza la codifica Base64 per trasferire lo script complesso nel container, aggirando i problemi di *escaping* dei caratteri speciali.
-  * **Riavvio:** Esegue il riavvio di ogni container dopo l'aggiornamento.
-
-### Prerequisiti
-
-  * Un host Proxmox.
-  * Accesso alla shell come `root` o un utente con permessi `sudo`.
-  * Container LXC Debian in esecuzione.
-
-### Installazione
-
-1.  Crea un file chiamato `update-terminal-welcome.sh` sul tuo host Proxmox.
-
-2.  Copia e incolla il codice fornito nell'ultima versione dello script.
-
-3.  Rendi lo script eseguibile:
-
-    ```bash
-    chmod +x update-terminal-welcome.sh
-    ```
-#### 🚀 Esecuzione Diretta da URL
-
-Se lo script è ospitato su un repository remoto (ad esempio, GitHub), è possibile scaricarlo ed eseguirlo direttamente in un unico passaggio, senza salvarlo localmente. Questo è particolarmente utile per le esecuzioni *one-shot*:
-
-
-```bash
-
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/fcaronte/proxmox_lxc_update_terminal_welcome/main/update-terminal-welcome.sh)" -- all
-```
-
-
-### Utilizzo
-
-Lo script supporta l'aggiornamento di singoli container, di un elenco di container, o di tutti i container attivi.
-
-| Comando | Descrizione |
-| :--- | :--- |
-| `./update-terminal-welcome.sh 8001` | Aggiorna solo il container con VMID 8001. |
-| `./update-terminal-welcome.sh 8001 8005` | Aggiorna i container 8001 e 8005. |
-| `./update-terminal-welcome.sh all` | Aggiorna **tutti** i container LXC attivi (running) trovati tramite `pct list`. |
-
-### Esempio di Output
-
-Quando l'aggiornamento è completo e accedi al container, vedrai un banner simile a questo:
-
-```bash
-Syncthing LXC Container
-
-  🖥️  OS: Debian GNU/Linux - Version: 12.5
-  🏠  Hostname: Syncthing
-  💡  IP Address: 192.168.1.206
-```
-
------
-
-## 🇬🇧 English
-
-# 🚀 LXC Terminal Welcome Banner Updater
-
-This Bash script (`update-terminal-welcome.sh`) automates the update of the login welcome banner (MOTD) on one or more Debian LXC containers managed by Proxmox, providing dynamic and colored information upon login.
-
-### Key Features
-
-  * **Centralized Update:** Applies the configuration to one or more LXCs in a single execution.
-  * **Automatic Discovery:** Finds all **active** (running) LXC containers on your Proxmox host.
-  * **Dynamic Information:** The displayed banner includes:
-      * Container Hostname.
-      * Debian OS version.
-      * Primary LAN IP address (optimized to ignore Docker/VPN IPs).
-  * **Automated Cleanup:** Removes old MOTD scripts that might interfere with the new banner.
-  * **Reliability:** Uses Base64 encoding to transfer the complex script into the container, bypassing special character *escaping* issues.
-  * **Reboot:** Executes a reboot of each container after the update.
-
-### Prerequisites
-
-  * A Proxmox host.
-  * Shell access as `root` or a user with `sudo` permissions.
-  * Running Debian LXC containers.
-
-### Installation
-
-1.  Create a file named `update-terminal-welcome.sh` on your Proxmox host.
-
-2.  Copy and paste the code provided in the latest script version.
-
-3.  Make the script executable:
-
-    ```bash
-    chmod +x update-terminal-welcome.sh
-    ```
+Script avanzato per iniettare un banner informativo dinamico (MOTD) all'interno degli LXC Proxmox. Genera un riepilogo in tempo reale dello stato del sistema e rileva automaticamente gli URL di tutti i container Docker attivi, gestendo in modo intelligente anche le reti in modalità `host`.
 
 ---
 
-### 🇬🇧 Aggiornamento del README (Inglese)
+## 🌟 Novità Versione 3.3.0
 
-Aggiungi la seguente sottosezione nella sezione "Usage" (`### Usage`):
+* **Interfaccia di Selezione (GUI)**: Menu interattivo grafico (`whiptail`) integrato per selezionare visivamente su quali LXC iniettare o aggiornare il banner.
+* **Label-Based Compose Detection**: Rileva automaticamente i percorsi personalizzati dei file `compose.yaml` tramite le etichette interne di Dockge, estraendo le porte reali configurate dall'utente.
+* **Host Network Bypass**: Supera i limiti di Docker isolando i metadati dei container che girano in modalità `network_mode: host` (es. Home Assistant ed ecosistema domotico).
+* **Compatibilità Termix & Mobile**: Stringhe ANSI pulite senza conflitti grafici, ottimizzate per il rendering e l'interactivity automatica sui terminali smartphone.
+* **Rilevamento Servizi Nativi**: Identifica se servizi locali come `FileBrowser` (servizi nativi di sistema) sono attivi e ne calcola dinamicamente la porta di ascolto locale.
 
+---
 
-#### 🚀 Direct Execution from URL
+## 🚀 Modalità di Esecuzione
 
-If the script is hosted on a remote repository (e.g., GitHub), you can download and run it directly in one step, without saving it locally. This is particularly useful for *one-shot* executions:
+Puoi scaricare ed eseguire lo script direttamente sul terminale del tuo **nodo Proxmox (Host PVE)** lanciando questo comando:
 
 ```bash
+wget -qLO update-terminal-welcome.sh [https://raw.githubusercontent.com/fcaronte/proxmox_lxc_update_terminal_welcome/refs/heads/main/update-terminal-welcome.sh](https://raw.githubusercontent.com/fcaronte/proxmox_lxc_update_terminal_welcome/refs/heads/main/update-terminal-welcome.sh) && bash update-terminal-welcome.sh
 
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/fcaronte/proxmox_lxc_update_terminal_welcome/main/update-terminal-welcome.sh)" -- all
+```
+Si aprirà un'interfaccia grafica dove potrai selezionare i singoli container o scegliere l'opzione ALL per automatizzare l'intero parco macchine.
+## 📋 Architettura del Rilevamento Porte
+Il motore inserito nel banner calcola gli indirizzi Web seguendo tre livelli prioritari di sicurezza:
+ 1. **Mappatura Standard**: Lettura diretta dei socket esposti dal demone Docker (modalità bridge/custom).
+ 2. **Analisi dello Stack**: Ispezione mirata del file Compose originario estratto dinamicamente tramite configurazione di Dockge.
+ 3. **Hardcoded Fallback**: Database interno delle porte standard per l'intero ecosistema Home Assistant (homeassistant, esphome, mosquitto, matter-server, wyoming-whisper/piper) e utility sussidiarie (stirling-pdf, gitea, qbittorrent, ecc.).
+## 📝 Licenza
+Sviluppato con il supporto di **Gemini AI**. Licenza MIT.
+# 🇬🇧 Proxmox LXC Dynamic MOTD Banner (English)
+# 🚀 Proxmox LXC Dynamic MOTD Banner (v3.3.0)
+Bash Script
+
+Proxmox
+
+GitHub Code
+
+License: MIT
+Advanced script to inject a dynamic information banner (MOTD) into Proxmox LXCs. It generates a real-time system status overview and automatically detects web URLs for all active Docker containers, intelligently handling host network modes.
+## 🌟 Version 3.3.0 Highlights
+ * **Selection Interface (GUI)**: Built-in interactive graphical menu (whiptail) to visually select which LXCs to inject or update with the banner.
+ * **Label-Based Compose Detection**: Automatically targets custom compose.yaml paths using Dockge's internal metadata labels, extracting user-configured host ports.
+ * **Host Network Bypass**: Overcomes Docker engine limitations that hide port metadata when containers run in network_mode: host (e.g., Home Assistant ecosystem).
+ * **Termix & Mobile Compatibility**: Clean ANSI escape strings preventing text distortion, fully optimized for rendering and automatic link detection on smartphone terminal apps.
+ * **Native Service Detection**: Checks whether host-level utilities like FileBrowser are running as native system services and dynamically parses their active listening ports.
+## 🚀 Execution
+You can download and run the script directly on your **Proxmox Node (PVE Host)** terminal by running the following command:
+```bash
+wget -qLO update-terminal-welcome.sh [https://raw.githubusercontent.com/fcaronte/proxmox_lxc_update_terminal_welcome/refs/heads/main/update-terminal-welcome.sh](https://raw.githubusercontent.com/fcaronte/proxmox_lxc_update_terminal_welcome/refs/heads/main/update-terminal-welcome.sh) && bash update-terminal-welcome.sh
+
+```
+A graphical interface will pop up, allowing you to select individual containers or pick ALL to automate the entire environment.
+## 📋 Port Detection Architecture
+The embedded tracking engine computes Web links using a three-tier fallback pipeline:
+ 1. **Standard Mapping**: Direct lookup of container sockets exposed via the Docker daemon (bridge/custom network models).
+ 2. **Stack Inspection**: Targeted parsing of the original Compose file text block, fetched dynamically via Dockge configuration labels.
+ 3. **Hardcoded Fallback**: Internal database mapping default ports for the whole Home Assistant stack (homeassistant, esphome, mosquitto, matter-server, wyoming-whisper/piper) and standard containers (stirling-pdf, gitea, qbittorrent, etc.).
+## 📝 License
+Developed with **Gemini AI** support. MIT License.
 ```
 
-### Usage
-
-The script supports updating single containers, a list of containers, or all active containers.
-
-| Command | Description |
-| :--- | :--- |
-| `./update-terminal-welcome.sh 8001` | Updates only the container with VMID 8001. |
-| `./update-terminal-welcome.sh 8001 8005` | Updates containers 8001 and 8005. |
-| `./update-terminal-welcome.sh all` | Updates **all** active (running) LXC containers found via `pct list`. |
-
-### Example Output
-
-Once the update is complete and you log into the container, you will see a banner similar to this:
-
-```bash
-Syncthing LXC Container
-
-  🖥️  OS: Debian GNU/Linux - Version: 12.5
-  🏠  Hostname: Syncthing
-  💡  IP Address: 192.168.1.206
 ```
